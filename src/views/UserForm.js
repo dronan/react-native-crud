@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {StyleSheet, Text, TextInput, View, Button} from 'react-native';
+import UsersContext from '../context/UsersContext';
 
 export default props => {
   const [user, setUser] = useState(
     props.route.params ? props.route.params : {},
   );
+
+  const {dispatch} = useContext(UsersContext);
 
   return (
     <View style={style.form}>
@@ -29,7 +32,16 @@ export default props => {
         value={user.avatarUrl}
         style={style.input}
       />
-      <Button title="Salvar" onPress={() => props.navigation.goBack()} />
+      <Button
+        title="Salvar"
+        onPress={() => {
+          dispatch({
+            type: user.id ? 'updateUser' : 'createUser',
+            payload: user,
+          });
+          props.navigation.goBack();
+        }}
+      />
     </View>
   );
 };
