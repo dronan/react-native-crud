@@ -5,11 +5,20 @@ const initialState = {users};
 
 const UsersContext = createContext({});
 
+const actions = {
+  deleteUser(state, action) {
+    const user = action.payload;
+    return {
+      users: state.users.filter(u => u.id !== user.id),
+    };
+  },
+};
+
 export const UsersProvider = props => {
   //dispatch é a função que será chamada para atualizar o estado
   function reducer(state, action) {
-    console.log(action);
-    return state;
+    const fn = actions[action.type];
+    return fn ? fn(state, action) : state;
   }
 
   const [state, dispatch] = useReducer(reducer, initialState);
